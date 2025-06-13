@@ -22,7 +22,7 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        docker build -t bijuthottathil/flask-postgres-microservice:latest .
+        docker build -t bijuthottathil/flask-postgres-microservice:latest -f app/Dockerfile ./app
         docker push bijuthottathil/flask-postgres-microservice:latest
 
     - name: Set up Kubectl
