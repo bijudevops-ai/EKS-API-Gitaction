@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response,render_template
 from db import get_db_connection
 import psycopg2.extras
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
@@ -7,7 +7,12 @@ import time
 app = Flask(__name__)
 @app.route('/')
 def home():
-    return "Hello from Flask!"
+   return render_template("index.html")
+
+
+@app.route('/ui')
+def ui():
+    return render_template("index.html")
 
 @app.route('/health')
 def health():

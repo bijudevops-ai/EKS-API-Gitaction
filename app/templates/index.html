@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Inventory UI</title>
+</head>
+<body>
+    <h1>Inventory Management</h1>
+
+    <h2>Get All Items</h2>
+    <button onclick="getItems()">Fetch Items</button>
+    <pre id="items"></pre>
+
+    <h2>Add Item</h2>
+    <form id="addForm">
+        <input type="text" id="product_name" placeholder="Product Name" required>
+        <input type="text" id="category" placeholder="Category" required>
+        <input type="number" id="quantity" placeholder="Quantity" required>
+        <input type="number" id="price" placeholder="Price" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <h2>Update Item</h2>
+    <form id="updateForm">
+        <input type="number" id="update_id" placeholder="Item ID" required>
+        <input type="text" id="update_product_name" placeholder="Product Name" required>
+        <input type="text" id="update_category" placeholder="Category" required>
+        <input type="number" id="update_quantity" placeholder="Quantity" required>
+        <input type="number" id="update_price" placeholder="Price" required>
+        <button type="submit">Update</button>
+    </form>
+
+    <h2>Delete Item</h2>
+    <form id="deleteForm">
+        <input type="number" id="delete_id" placeholder="Item ID" required>
+        <button type="submit">Delete</button>
+    </form>
+
+    <script>
+        async function getItems() {
+            const res = await fetch('/items');
+            const data = await res.json();
+            document.getElementById('items').textContent = JSON.stringify(data, null, 2);
+        }
+
+        document.getElementById('addForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = {
+                product_name: document.getElementById('product_name').value,
+                category: document.getElementById('category').value,
+                quantity: parseInt(document.getElementById('quantity').value),
+                price: parseFloat(document.getElementById('price').value)
+            };
+            await fetch('/items', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            getItems();
+        });
+
+        document.getElementById('updateForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const itemId = document.getElementById('update_id').value;
+            const data = {
+                product_name: document.getElementById('update_product_name').value,
+                category: document.getElementById('update_category').value,
+                quantity: parseInt(document.getElementById('update_quantity').value),
+                price: parseFloat(document.getElementById('update_price').value)
+            };
+            await fetch(`/items/${itemId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            getItems();
+        });
+
+        document.getElementById('deleteForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const itemId = document.getElementById('delete_id').value;
+            await fetch(`/items/${itemId}`, { method: 'DELETE' });
+            getItems();
+        });
+    </script>
+</body>
+</html>
