@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: flask
-          image: bijuthottathil/flask-postgres-microservice:1.0
+          image: bijuthottathil/flask-postgres-microservice:latest
           ports:
             - containerPort: 5000
           resources:
