@@ -1,0 +1,58 @@
+name: Deploy Flask App to EKS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t bijuthottathil/flask-postgres-microservice:latest .
+        docker push bijuthottathil/flask-postgres-microservice:latest
+
+    - name: Set up Kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: v1.32.2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Update kubeconfig for EKS
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name my-eks-cluster
+        kubectl config current-context
+        kubectl cluster-info
+
+    - name: Apply Kubernetes YAMLs
+      run: |
+        kubectl apply -f k8s/ --validate=false
+
+    - name: Restart Deployment to Pull Latest Image
+      run: |
+        kubectl rollout restart deployment/flask-app
+        kubectl rollout status deployment/flask-app
+
+    - name: Verify Resources
+      run: |
+        kubectl get pods
+        kubectl get svc
