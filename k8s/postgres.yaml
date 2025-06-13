@@ -32,8 +32,11 @@ kind: Service
 metadata:
   name: postgres
 spec:
+  type: LoadBalancer  # <- added this for external access
   selector:
     app: postgres
   ports:
-    - port: 5432
-      targetPort: 5432
+    - name: postgres
+      protocol: TCP
+      port: 5432       # exposed externally
+      targetPort: 5432 # conta
