@@ -8,10 +8,13 @@ spec:
   source:
     repoURL: https://github.com/bijudevops-ai/EKS-API-Gitaction.git
     targetRevision: main
-    path: k8s
+    path: *.*   # Path to the folder with values.yaml
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: monitoring
   syncPolicy:
     automated:
       selfHeal: true
