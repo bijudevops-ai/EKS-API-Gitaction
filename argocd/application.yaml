@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: hhttps://github.com/bijudevops-ai/EKS-API-Gitaction.git
+    repoURL: https://github.com/bijudevops-ai/EKS-API-Gitaction.git
     targetRevision: main
     path: k8s
   destination:
