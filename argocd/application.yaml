@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: flask-app
+  name: prometheus
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/bijudevops-ai/EKS-API-Gitaction.git
     targetRevision: main
-    path: *.*   # Path to the folder with values.yaml
+    path: "."                    # Same directory as values.yaml
     helm:
       valueFiles:
         - values.yaml
