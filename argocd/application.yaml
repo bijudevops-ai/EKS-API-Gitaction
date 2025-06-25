@@ -1,20 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: flask-app
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/bijudevops-ai/EKS-API-Gitaction.git
+    repoURL: hhttps://github.com/bijudevops-ai/EKS-API-Gitaction.git
     targetRevision: main
-    path: "."                    # Same directory as values.yaml
-    helm:
-      valueFiles:
-        - values.yaml
+    path: k8s
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: default
   syncPolicy:
     automated:
       selfHeal: true
